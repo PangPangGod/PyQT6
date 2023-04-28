@@ -1,5 +1,4 @@
 import sys
-import os
 import time
 from PIL import Image
 from PyQt6.QtCore import QSize
@@ -14,6 +13,7 @@ from PyQt6.QtWidgets import (
 class MainWindow(QMainWindow):
     tempimglogbox = []
     folder = ''
+    timenow = time.strftime("[%H:%M:%S]",time.localtime(time.time()))
     
     def __init__(self):
         super().__init__()
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.fixed_text)
         
         #TextBox
-        self.textbox = QPlainTextEdit(" ** JPEG EDITOR MADE BY SJH. ver1.0 ** \n")
+        self.textbox = QPlainTextEdit(" ** JPEG EDITOR MADE BY SJH. ver1.0.1** \n")
         layout.addWidget(self.textbox)
         
         #Size, ETC
@@ -50,11 +50,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)        
 
         
-    #[현재시각]+file이름 textbox에 log형식으로 올리고 
-    #파일 가져오기와 .jpeg 변환 버튼 분리해서
-    #가져오기 하면 return 하도록 하고 변환하면 temp list 비우기
-    
-    #tempimgbox
+    #[현재시각]+file이름 textbox에 log형식으로
+
     
     
     def getFileNames(self): 
@@ -64,10 +61,9 @@ class MainWindow(QMainWindow):
         
         for i in response[0] :
             imglogbox.append(str(i))
-            timenow = time.strftime("[%H:%M:%S]",time.localtime(time.time()))
-            self.textbox.appendPlainText(f"{timenow} : {str(i)} has been saved. CONVERT IF YOU WANT")
+            self.textbox.appendPlainText(f"[{MainWindow.timenow}] : {str(i)} has been saved. CONVERT IF YOU WANT")
         
-        self.textbox.appendPlainText("\n ====================================================== \n")
+        self.textbox.appendPlainText("======================================================")
         # img = Image.open(a[0])
         # img.show()
     
@@ -84,14 +80,14 @@ class MainWindow(QMainWindow):
                 #if there is no selected folder, Raise an saveRoute function.
                 try :
                     img.save(f"{MainWindow.folder}/{img_name}.jpeg",'jpeg')
-                    self.textbox.appendPlainText(f"Convert Completed. Saved in : {MainWindow.folder}")
+                    self.textbox.appendPlainText(f"[{MainWindow.timenow}] Convert Completed. Saved in : {MainWindow.folder}")
                     self.fixed_text.setText(f"Current Route is : {MainWindow.folder}")
                 except PermissionError :
                     MainWindow.saveRoute(self)
                     img.save(f"{MainWindow.folder}/{img_name}.jpeg",'jpeg')
-                    self.textbox.appendPlainText(f"Convert Completed. Saved in : {MainWindow.folder}")
+                    self.textbox.appendPlainText(f"[{MainWindow.timenow}] Convert Completed. Saved in : {MainWindow.folder}")
                     self.fixed_text.setText(f"Current Route is : {MainWindow.folder}")
-                
+            self.textbox.appendPlainText("======================================================")
                 
         else :
             self.textbox.appendPlainText("======================================================")
